@@ -30,6 +30,7 @@ PRE_TRAINED_MODEL = "efficientdet_d0_coco17_tpu-32"
 PATH_TO_LABELS=r'.\data\label_map.pbtxt'
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 print ('category_index: ', category_index)
+label_id_offset = 0
 
 def write_video(video_in_filepath, video_out_filepath, detection_model):
     if not os.path.exists(video_in_filepath):
@@ -54,7 +55,7 @@ def write_video(video_in_filepath, video_out_filepath, detection_model):
         viz_utils.visualize_boxes_and_labels_on_image_array(
                   image_np,
                   results['detection_boxes'][0].numpy(),
-                  (results['detection_classes'][0].numpy()+1).astype(int),
+                  (results['detection_classes'][0].numpy()+label_id_offset).astype(int),
                   results['detection_scores'][0].numpy(),
                   category_index,
                   use_normalized_coordinates=True,
@@ -126,6 +127,6 @@ def main(argv):
    OUTPUT_TEST_FILE = r'./data/test/' + OUTFILE
    write_video(INPUT_IMAGE_FILE, OUTPUT_TEST_FILE, detect_fn)
    
-# To run: python run_image_inference.py -i test_006.jpg -e run3
+# To run: python run_video_inference.py -i test_006.jpg -e run3
 if __name__ == "__main__":
    main(sys.argv[1:])
